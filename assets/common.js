@@ -390,6 +390,17 @@ function playStream(url, title) {
           qualBadge.classList.add("show");
         }
         window._stallTimer = setTimeout(_retryViaProxy, 15000);
+        // Lock screen / notification bar media controls
+        if ("mediaSession" in navigator) {
+          navigator.mediaSession.metadata = new MediaMetadata({
+            title: title || "MatchZone Live",
+            artist: "MatchZone",
+            artwork: [{ src: "/matchzone/assets/og-preview.png", sizes: "512x512", type: "image/png" }],
+          });
+          navigator.mediaSession.setActionHandler("play", () => video.play().catch(() => {}));
+          navigator.mediaSession.setActionHandler("pause", () => video.pause());
+          navigator.mediaSession.setActionHandler("stop", () => closePlayer());
+        }
       });
 
       const _onFirstFrame = () => {
@@ -835,6 +846,20 @@ document.addEventListener("DOMContentLoaded", () => {
       .forEach((b) => b.classList.remove("pip-active"));
     const video = document.getElementById("player-video");
     if (video && video.paused) setTimeout(() => { if (video.paused) video.play().catch(() => {}); }, 120);
+  });
+
+  // Auto Picture-in-Picture: float the player when user switches to another app
+  document.addEventListener("visibilitychange", async () => {
+    if (document.visibilityState !== "hidden") return;
+    const player = document.getElementById("player-modal");
+    const video = document.getElementById("player-video");
+    if (!player || !player.classList.contains("open")) return;
+    if (!video || video.paused || video.style.display === "none") return;
+    if (!document.pictureInPictureEnabled || document.pictureInPictureElement) return;
+    try {
+      await video.requestPictureInPicture();
+      document.querySelectorAll(".nfp-pip-btn").forEach((b) => b.classList.add("pip-active"));
+    } catch (_) {}
   });
 
   updateLiveBadge();
