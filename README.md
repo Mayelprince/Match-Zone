@@ -9,10 +9,10 @@ A standalone sports scores & streaming website powered by the Prince API.
 Open `index.html` and find this line near the top of the `<script>` block:
 
 ```js
-const API_BASE = 'https://your-prince-api.replit.app';
+const API_BASE = 'https://your-prince-api.com';
 ```
 
-Replace the URL with the deployed URL of your Prince API (e.g. `https://prince-api.replit.app`).
+Replace the URL with the deployed URL of your Prince API (e.g. `https://prince-api.com`).
 
 **2. Install & run locally**
 
