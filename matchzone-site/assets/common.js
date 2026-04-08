@@ -292,6 +292,15 @@ function playStream(url, title) {
   const errMsg = document.getElementById("player-error");
   const qualBadge = document.getElementById("quality-badge");
   const bigBtn = document.querySelector(".nfp-big-btn");
+  const loader = document.getElementById("player-loader");
+  const loaderText = document.getElementById("loader-text");
+
+  const _showLoader = (text) => {
+    if (loader) loader.classList.add("show");
+    if (loaderText) loaderText.textContent = text || "Loading stream…";
+    if (errMsg) errMsg.classList.remove("show");
+  };
+  const _hideLoader = () => { if (loader) loader.classList.remove("show"); };
 
   if (video) {
     video.style.display = "none";
@@ -302,6 +311,7 @@ function playStream(url, title) {
     iframe.src = "";
   }
   if (errMsg) errMsg.classList.remove("show");
+  _showLoader("Loading stream…");
   if (qualBadge) qualBadge.classList.remove("show");
   if (bigBtn) bigBtn.classList.remove("nfp-hidden");
 
@@ -323,18 +333,21 @@ function playStream(url, title) {
       // Try next fallback stream before resorting to proxy/error
       if (window._streamFallbacks && window._streamFallbacks.length) {
         const next = window._streamFallbacks.shift();
+        _showLoader("Trying another stream…");
         if (qualBadge) { qualBadge.textContent = "Trying next…"; qualBadge.classList.add("show"); }
         if (window._stallTimer) { clearTimeout(window._stallTimer); window._stallTimer = null; }
         playStream(next.url, next.title || title);
         return;
       }
       if (url.includes("stream-proxy?")) {
+        _hideLoader();
         if (errMsg) errMsg.classList.add("show");
         if (qualBadge) qualBadge.classList.remove("show");
         return;
       }
       const proxyUrl =
         "/matchzone/data/stream-proxy?url=" + encodeURIComponent(url);
+      _showLoader("Trying backup stream…");
       if (qualBadge) {
         qualBadge.textContent = "Retrying…";
         qualBadge.classList.add("show");
@@ -383,6 +396,7 @@ function playStream(url, title) {
           clearTimeout(window._stallTimer);
           window._stallTimer = null;
         }
+        _hideLoader();
         video.removeEventListener("timeupdate", _onFirstFrame);
       };
       video.addEventListener("timeupdate", _onFirstFrame);
@@ -408,6 +422,7 @@ function playStream(url, title) {
         video.addEventListener("timeupdate", function _c() {
           clearTimeout(window._stallTimer);
           window._stallTimer = null;
+          _hideLoader();
           video.removeEventListener("timeupdate", _c);
         });
       }
@@ -415,6 +430,8 @@ function playStream(url, title) {
   } else if (iframe) {
     iframe.src = url;
     iframe.style.display = "block";
+    iframe.onload = () => _hideLoader();
+    setTimeout(() => _hideLoader(), 6000);
   }
 
   player.classList.add("open");
