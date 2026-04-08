@@ -345,7 +345,9 @@ function playStream(url, title) {
 
     const _retryViaProxy = () => {
       if (window._stallTimer) { clearTimeout(window._stallTimer); window._stallTimer = null; }
-      // If stream played content before stopping, don't silently cycle — show "ended" message
+      // If video is still actively playing, this is a false alarm — ignore it
+      if (video && !video.paused && video.readyState >= 2 && video.currentTime > 0) return;
+      // If stream played content before stopping, show "ended" message
       if (window._streamPlayed) { _showError(true); return; }
       // Stream never played — try next fallback silently
       if (window._streamFallbacks && window._streamFallbacks.length) {
@@ -372,9 +374,10 @@ function playStream(url, title) {
       const hls = new Hls({
         maxBufferLength: 30,
         enableWorker: true,
-        fragLoadingMaxRetry: 1,
-        levelLoadingMaxRetry: 1,
-        manifestLoadingMaxRetry: 1,
+        fragLoadingMaxRetry: 4,
+        fragLoadingRetryDelay: 1000,
+        levelLoadingMaxRetry: 3,
+        manifestLoadingMaxRetry: 2,
       });
       window._hlsInst = hls;
       hls.loadSource(url);
