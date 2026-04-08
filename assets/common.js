@@ -1,9 +1,9 @@
 // ════════════════════════════════════════════════
 //  CONFIG — Prince API base URL (this Replit project)
-//  Dev:  xxxxxxx
-//  Prod: https://api.princetechn.com
+//  Dev:  https://303eec18-e350-463d-802b-bc11c209ff4f-00-3apcolhch32rd.janeway.replit.dev
+//  Prod: https://prince-apis.replitmayel.replit.app
 // ════════════════════════════════════════════════
-const API_BASE = 'https://api.princetechn.com';
+const API_BASE = '';
 const API_KEY  = 'prince';
 function apiUrl(path) {
   const sep = path.includes('?') ? '&' : '?';

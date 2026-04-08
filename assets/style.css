@@ -463,24 +463,38 @@ footer a { color: var(--primary); }
   .score { font-size: 1.35rem; }
   .team-logo, .team-logo-placeholder { width: 34px; height: 34px; }
 
-  /* Match ended overlay — mobile */
-  .ended-overlay { align-items: flex-start; padding-top: 0; }
-  .ended-content { padding: 72px 16px 28px; max-width: 100%; }
-  .ended-close { top: 14px; right: 14px; width: 38px; height: 38px; font-size: .9rem; }
-  .ended-badge { font-size: .68rem; padding: 5px 12px; margin-bottom: 10px; }
-  .ended-league { margin-bottom: 18px; font-size: .7rem; }
-  .ended-scoreboard { gap: 6px; margin-bottom: 18px; }
-  .ended-score { font-size: 2rem; letter-spacing: 1px; }
-  .ended-logo { width: 52px; height: 52px; }
+  /* ── Match Ended Overlay: mobile complete redesign ── */
+  .ended-overlay { align-items: flex-start; }
+  .ended-content { padding: 64px 18px 32px; max-width: 100%; }
+  .ended-close { top: 12px; right: 12px; width: 36px; height: 36px; font-size: .85rem; }
+
+  .ended-badge { font-size: .66rem; padding: 5px 14px; margin-bottom: 8px; }
+  .ended-league { font-size: .68rem; margin-bottom: 22px; }
+
+  /* Scoreboard: 2-column grid — teams on row 1, score full-width on row 2 */
+  .ended-scoreboard {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto auto;
+    gap: 10px 12px;
+    margin-bottom: 22px;
+  }
+  .ended-team:first-child  { grid-column: 1; grid-row: 1; }
+  .ended-team:last-child   { grid-column: 2; grid-row: 1; }
+  .ended-score-wrap        { grid-column: 1 / -1; grid-row: 2; }
+
+  .ended-logo { width: 60px; height: 60px; }
   .ended-logo .team-logo,
-  .ended-logo .team-logo-placeholder { width: 52px; height: 52px; font-size: 1rem; border-radius: 10px; }
-  .ended-team-name { font-size: .75rem; max-width: 80px; }
-  .ended-ht { font-size: .68rem; margin-top: 6px; }
+  .ended-logo .team-logo-placeholder { width: 60px; height: 60px; border-radius: 12px; font-size: 1.2rem; }
+  .ended-team-name { font-size: .78rem; max-width: 100%; }
+  .ended-score { font-size: 2.8rem; letter-spacing: 2px; }
+  .ended-ht { font-size: .7rem; margin-top: 6px; }
+
   .ended-divider { margin-bottom: 14px; }
-  .ended-msg { font-size: .78rem; margin-bottom: 20px; }
+  .ended-msg { font-size: .82rem; margin-bottom: 20px; line-height: 1.5; }
   .ended-actions { flex-direction: column; align-items: stretch; gap: 8px; }
-  .ended-actions .btn, .ended-actions a { width: 100%; justify-content: center; text-align: center; }
-  .ended-watermark { margin-top: 20px; font-size: .65rem; }
+  .ended-actions .btn, .ended-actions button, .ended-actions a { width: 100%; justify-content: center; display: flex; }
+  .ended-watermark { margin-top: 22px; font-size: .62rem; }
 }
 
 /* ── MATCH ENDED OVERLAY ── */
