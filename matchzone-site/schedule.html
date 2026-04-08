@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MatchZone Live – Schedule</title>
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="MatchZone Live – Schedule">
+  <meta property="og:description" content="Upcoming football fixtures and match schedules.">
+  <meta property="og:image" content="https://prince-apis.replitmayel.replit.app/matchzone/assets/og-preview.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="MatchZone Live – Schedule">
+  <meta name="twitter:description" content="Upcoming football fixtures and match schedules.">
+  <meta name="twitter:image" content="https://prince-apis.replitmayel.replit.app/matchzone/assets/og-preview.png">
+  <link rel="icon" type="image/png" href="assets/favicon.png">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="assets/style.css">
+  <script src="https://cdn.jsdelivr.net/npm/hls.js@latest/dist/hls.min.js"></script>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a class="logo" href="index.html"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 36" width="26" height="26" style="vertical-align:middle;margin-right:5px;flex-shrink:0"><defs><linearGradient id="mzg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#00e5ff"/><stop offset="100%" stop-color="#0066ff"/></linearGradient></defs><rect width="36" height="36" rx="9" fill="url(#mzg)"/><text x="18" y="25" text-anchor="middle" font-family="Arial Black,Arial,sans-serif" font-weight="900" font-size="17" fill="#000" letter-spacing="-1">MZ</text></svg>Match<span>Zone</span></a>
+    <div class="nav-links">
+      <a class="nav-link" href="index.html"><i class="fas fa-home"></i> Home</a>
+      <a class="nav-link" href="live.html"><i class="fas fa-circle-dot"></i> Live</a>
+      <a class="nav-link" href="streaming.html"><i class="fas fa-play-circle"></i> Streaming</a>
+      <a class="nav-link" href="schedule.html"><i class="fas fa-calendar"></i> Schedule</a>
+      <a class="nav-link" href="news.html"><i class="fas fa-newspaper"></i> News</a>
+      <a class="nav-link" href="tv.html"><i class="fas fa-tv"></i> Live TV</a>
+      <a class="nav-link" href="docs.html"><i class="fas fa-book"></i> Docs</a>
+    </div>
+    <span class="live-badge" id="live-badge">— LIVE</span>
+    <button class="nav-hamburger" id="nav-hamburger" onclick="toggleDrawer()" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+<div class="nav-drawer" id="nav-drawer">
+  <a class="nav-link" href="index.html"><i class="fas fa-home"></i> Home</a>
+  <a class="nav-link" href="live.html"><i class="fas fa-circle-dot"></i> Live</a>
+  <a class="nav-link" href="streaming.html"><i class="fas fa-play-circle"></i> Streaming</a>
+  <a class="nav-link" href="schedule.html"><i class="fas fa-calendar"></i> Schedule</a>
+  <a class="nav-link" href="news.html"><i class="fas fa-newspaper"></i> News</a>
+  <a class="nav-link" href="tv.html"><i class="fas fa-tv"></i> Live TV</a>
+  <a class="nav-link" href="docs.html"><i class="fas fa-book"></i> Docs</a>
+</div>
+
+<div class="page-wrap">
+  <div class="page-header">
+    <div class="container">
+      <h1><i class="fas fa-calendar-alt"></i> Match Schedule</h1>
+      <p>Upcoming and recent matches — grouped by date</p>
+    </div>
+  </div>
+
+  <section>
+    <div class="container">
+      <div class="error-banner" id="err"><i class="fas fa-exclamation-circle"></i><span>Could not load schedule data.</span></div>
+
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:20px">
+        <div class="date-tabs" id="date-tabs" style="margin-bottom:0">
+          <button class="date-tab active" data-day="today" onclick="switchDay(this)">Today</button>
+          <button class="date-tab" data-day="tomorrow" onclick="switchDay(this)">Tomorrow</button>
+          <button class="date-tab" data-day="week" onclick="switchDay(this)">This Week</button>
+          <button class="date-tab" data-day="all" onclick="switchDay(this)">All</button>
+        </div>
+        <div class="filter-row" id="sport-filter">
+          <button class="filter-btn active" data-sport="all" onclick="filterSport(this)">All Sports</button>
+          <button class="filter-btn" data-sport="football" onclick="filterSport(this)">Football</button>
+          <button class="filter-btn" data-sport="basketball" onclick="filterSport(this)">Basketball</button>
+        </div>
+      </div>
+
+      <div id="schedule-wrap">
+        <div class="matches-grid">
+          <div class="skeleton skel-card"></div>
+          <div class="skeleton skel-card"></div>
+          <div class="skeleton skel-card"></div>
+          <div class="skeleton skel-card"></div>
+          <div class="skeleton skel-card"></div>
+          <div class="skeleton skel-card"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<footer><p>&#9889; MatchZone Live &nbsp;|&nbsp; &copy; 2025 PrinceTech &nbsp;|&nbsp; <a href="https://github.com/Mayelprince" target="_blank" rel="noopener" style="color:inherit"><i class="fab fa-github"></i> GitHub</a></p></footer>
+
+
+
+<div class="modal-bg" id="match-modal">
+  <div class="modal">
+    <div class="modal-head"><h3 id="modal-title">Match Details</h3><button class="modal-close" onclick="closeModal()"><i class="fas fa-times"></i></button></div>
+    <div class="modal-body" id="modal-body"></div>
+  </div>
+</div>
+
+<div class="nfp" id="player-modal">
+  <div class="nfp-top" id="nfp-top">
+    <button class="nfp-btn" onclick="closePlayer()"><i class="fas fa-arrow-left"></i></button>
+    <div class="nfp-top-title-wrap">
+      <span class="nfp-live-pulse"></span>
+      <span class="nfp-top-title" id="player-title">Watch Live</span>
+    </div>
+    <button class="nfp-btn nfp-pip-btn" onclick="togglePiP()" title="Picture in Picture"><i class="fas fa-clone"></i></button>
+  </div>
+  <div class="nfp-media" id="player-wrap">
+    <video id="player-video" playsinline preload="none"></video>
+    <iframe id="player-iframe" allowfullscreen allow="autoplay; fullscreen; picture-in-picture" sandbox="allow-scripts allow-forms allow-popups allow-popups-to-escape-sandbox"></iframe>
+    <div class="nfp-error" id="player-error">
+      <i class="fas fa-satellite-dish"></i>
+      <p>Stream unavailable</p>
+      <small>No working stream found. All available links were tried — check back during a live match.</small>
+    </div>
+  </div>
+  <div class="nfp-center" id="nfp-center">
+    <div class="nfp-big-btn" onclick="togglePlayPause()"><i class="fas fa-pause" id="big-play-icon"></i></div>
+  </div>
+  <div class="nfp-bottom" id="nfp-bottom">
+    <div class="nfp-progress-row">
+      <div class="nfp-progress"><div class="nfp-prog-fill"></div></div>
+      <span class="nfp-live-tag"><i class="fas fa-circle"></i> LIVE</span>
+    </div>
+    <div class="nfp-ctrl-row">
+      <div class="nfp-ctrl-left">
+        <button class="nfp-btn" onclick="togglePlayPause()"><i class="fas fa-pause" id="play-icon"></i></button>
+        <div class="nfp-vol-row">
+          <button class="nfp-btn" onclick="toggleMute()"><i class="fas fa-volume-up" id="vol-icon"></i></button>
+          <input type="range" class="nfp-vol" id="vol-slider" min="0" max="1" step="0.05" value="1" oninput="setVolume(this.value)">
+        </div>
+        <span class="nfp-qual" id="quality-badge"></span>
+      </div>
+      <div class="nfp-ctrl-right">
+        <button class="nfp-btn" onclick="toggleFullscreen()"><i class="fas fa-expand" id="fs-icon"></i></button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="assets/common.js"></script>
+<script>
+let allMatches = [];
+let currentDay = 'today';
+let currentSport = 'all';
+
+const dayLabel = { today: 'Today', tomorrow: 'Tomorrow', week: 'This Week', all: 'All Matches' };
+
+function getDay(dateStr) {
+  if (!dateStr) return null;
+  const now = new Date();
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  let d;
+  if (dateStr.includes('T') || dateStr.includes('-')) {
+    d = new Date(dateStr);
+  } else {
+    return null;
+  }
+  const mDay = new Date(d.getFullYear(), d.getMonth(), d.getDate());
+  const diff = Math.round((mDay - today) / 86400000);
+  if (diff === 0) return 'today';
+  if (diff === 1) return 'tomorrow';
+  if (diff > 1 && diff <= 7) return 'week';
+  return 'other';
+}
+
+function getMatchDate(m) {
+  return m.startTime || (m.date ? m.date + 'T' + (m.time || '00:00') : null);
+}
+
+function switchDay(btn) {
+  document.querySelectorAll('#date-tabs .date-tab').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  currentDay = btn.dataset.day;
+  render();
+}
+
+function filterSport(btn) {
+  document.querySelectorAll('#sport-filter .filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  currentSport = btn.dataset.sport;
+  render();
+}
+
+function render() {
+  clearCache();
+  let matches = allMatches;
+  if (currentSport !== 'all') matches = matches.filter(m => (m.sport || '').toLowerCase() === currentSport);
+  if (currentDay !== 'all') {
+    matches = matches.filter(m => getDay(getMatchDate(m)) === currentDay);
+  }
+
+  const wrap = document.getElementById('schedule-wrap');
+  if (!matches.length) {
+    wrap.innerHTML = `<div class="empty"><i class="fas fa-calendar"></i><p>No matches scheduled for ${dayLabel[currentDay] || 'this period'}</p></div>`;
+    return;
+  }
+
+  // Group by date string
+  const groups = {};
+  matches.forEach(m => {
+    const raw = getMatchDate(m);
+    let label = 'Unknown Date';
+    if (raw) {
+      try {
+        const d = new Date(raw);
+        const diff = getDay(raw);
+        if (diff === 'today') label = 'Today — ' + d.toLocaleDateString([], { weekday: 'long', month: 'long', day: 'numeric' });
+        else if (diff === 'tomorrow') label = 'Tomorrow — ' + d.toLocaleDateString([], { weekday: 'long', month: 'long', day: 'numeric' });
+        else label = d.toLocaleDateString([], { weekday: 'long', month: 'long', day: 'numeric' });
+      } catch {}
+    }
+    if (!groups[label]) groups[label] = [];
+    groups[label].push(m);
+  });
+
+  wrap.innerHTML = Object.entries(groups).map(([label, ms]) => `
+    <div style="margin-bottom:28px">
+      <div class="date-group-title">${label}</div>
+      <div class="matches-grid">${ms.map(m => buildMatchCard(m, m.streams && m.streams.length > 0)).join('')}</div>
+    </div>`).join('');
+}
+
+async function load() {
+  hideBanner('err');
+  document.getElementById('schedule-wrap').innerHTML = `<div class="matches-grid">${skeletons(6)}</div>`;
+
+  const [fbRes, stRes] = await Promise.allSettled([
+    fetch(apiUrl('/matchzone/data/football-live')).then(r => r.json()),
+    fetch(apiUrl('/matchzone/data/streaming?sport=all')).then(r => r.json()),
+  ]);
+
+  allMatches = [];
+
+  // Football — include ALL (live, finished, upcoming) — upcoming ones will show in schedule
+  if (fbRes.status === 'fulfilled' && fbRes.value.success) {
+    const all = (fbRes.value.result?.matches || []).map(m => ({ ...m, sport: 'football' }));
+    allMatches.push(...all);
+  } else {
+    showBanner('err', 'Football schedule unavailable.');
+  }
+
+  // Streaming — add upcoming (Not Started) that have a startTime
+  if (stRes.status === 'fulfilled' && stRes.value.success) {
+    const upcoming = (stRes.value.result?.matches || []).filter(m => !isLive(m.status) && !isFinished(m.status) && m.startTime);
+    // Avoid duplicates (match by id)
+    const existingIds = new Set(allMatches.map(m => m.id));
+    upcoming.forEach(m => { if (!existingIds.has(m.id)) allMatches.push(m); });
+  }
+
+  const liveCount = allMatches.filter(m => isLive(m.status)).length;
+  document.getElementById('live-badge').textContent = liveCount + ' LIVE';
+  render();
+}
+
+load();
+setInterval(load, 90000);
+</script>
+</body>
+</html>
