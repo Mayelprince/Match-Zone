@@ -79,6 +79,10 @@ function isLive(status) {
     s.includes("2nd") ||
     s.includes("extra") ||
     s.includes("penalt") ||
+    s === "matching" ||
+    s === "in play" ||
+    s === "1t" || s === "2t" ||
+    /^\d+['']/.test(s) ||           // "30'", "45+2'" — minute notation
     (s.includes("half") && !s.includes("half time"))
   );
 }
