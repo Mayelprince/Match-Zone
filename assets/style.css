@@ -316,6 +316,22 @@ section { padding: 22px 0; }
 .nfp-error p { font-size: 1rem; font-weight: 700; color: #fff; margin: 0; }
 .nfp-error small { font-size: .8rem; opacity: .7; }
 
+.nfp-loader {
+  display: none; flex-direction: column; align-items: center; justify-content: center;
+  gap: 16px; position: absolute; inset: 0; z-index: 6;
+  background: rgba(0,0,0,.55); color: rgba(255,255,255,.85);
+  font-size: .88rem; letter-spacing: .05em; text-transform: uppercase;
+}
+.nfp-loader.show { display: flex; }
+.nfp-spinner {
+  width: 46px; height: 46px;
+  border: 3px solid rgba(255,255,255,.18);
+  border-top-color: var(--primary);
+  border-radius: 50%;
+  animation: nfp-spin .75s linear infinite;
+}
+@keyframes nfp-spin { to { transform: rotate(360deg); } }
+
 .nfp-top {
   position: absolute; top: 0; left: 0; right: 0;
   padding: 20px 20px 52px;
