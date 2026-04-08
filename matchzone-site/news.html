@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MatchZone Live – Sports News</title>
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="MatchZone Live – News">
+  <meta property="og:description" content="Latest football news, transfers and match reports.">
+  <meta property="og:image" content="https://prince-apis.replitmayel.replit.app/matchzone/assets/og-preview.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="MatchZone Live – News">
+  <meta name="twitter:description" content="Latest football news, transfers and match reports.">
+  <meta name="twitter:image" content="https://prince-apis.replitmayel.replit.app/matchzone/assets/og-preview.png">
+  <link rel="icon" type="image/png" href="assets/favicon.png">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="assets/style.css">
+  <script src="https://cdn.jsdelivr.net/npm/hls.js@latest/dist/hls.min.js"></script>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a class="logo" href="index.html"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 36" width="26" height="26" style="vertical-align:middle;margin-right:5px;flex-shrink:0"><defs><linearGradient id="mzg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#00e5ff"/><stop offset="100%" stop-color="#0066ff"/></linearGradient></defs><rect width="36" height="36" rx="9" fill="url(#mzg)"/><text x="18" y="25" text-anchor="middle" font-family="Arial Black,Arial,sans-serif" font-weight="900" font-size="17" fill="#000" letter-spacing="-1">MZ</text></svg>Match<span>Zone</span></a>
+    <div class="nav-links">
+      <a class="nav-link" href="index.html"><i class="fas fa-home"></i> Home</a>
+      <a class="nav-link" href="live.html"><i class="fas fa-circle-dot"></i> Live</a>
+      <a class="nav-link" href="streaming.html"><i class="fas fa-play-circle"></i> Streaming</a>
+      <a class="nav-link" href="schedule.html"><i class="fas fa-calendar"></i> Schedule</a>
+      <a class="nav-link" href="news.html"><i class="fas fa-newspaper"></i> News</a>
+      <a class="nav-link" href="tv.html"><i class="fas fa-tv"></i> Live TV</a>
+      <a class="nav-link" href="docs.html"><i class="fas fa-book"></i> Docs</a>
+    </div>
+    <span class="live-badge" id="live-badge">— LIVE</span>
+    <button class="nav-hamburger" id="nav-hamburger" onclick="toggleDrawer()" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+<div class="nav-drawer" id="nav-drawer">
+  <a class="nav-link" href="index.html"><i class="fas fa-home"></i> Home</a>
+  <a class="nav-link" href="live.html"><i class="fas fa-circle-dot"></i> Live</a>
+  <a class="nav-link" href="streaming.html"><i class="fas fa-play-circle"></i> Streaming</a>
+  <a class="nav-link" href="schedule.html"><i class="fas fa-calendar"></i> Schedule</a>
+  <a class="nav-link" href="news.html"><i class="fas fa-newspaper"></i> News</a>
+  <a class="nav-link" href="tv.html"><i class="fas fa-tv"></i> Live TV</a>
+  <a class="nav-link" href="docs.html"><i class="fas fa-book"></i> Docs</a>
+</div>
+
+<div class="page-wrap">
+  <div class="page-header">
+    <div class="container">
+      <h1><i class="fas fa-newspaper"></i> Sports News</h1>
+      <p>Latest headlines from the world of sport</p>
+    </div>
+  </div>
+
+  <section>
+    <div class="container">
+      <div class="error-banner" id="err"><i class="fas fa-exclamation-circle"></i><span>Could not load news.</span></div>
+      <div class="section-hdr">
+        <div class="filter-row" id="tag-filter">
+          <button class="filter-btn active" data-tag="" onclick="switchTag(this)">All</button>
+          <button class="filter-btn" data-tag="football" onclick="switchTag(this)"><i class="fas fa-futbol"></i> Football</button>
+          <button class="filter-btn" data-tag="basketball" onclick="switchTag(this)"><i class="fas fa-basketball"></i> Basketball</button>
+          <button class="filter-btn" data-tag="tennis" onclick="switchTag(this)"><i class="fas fa-table-tennis"></i> Tennis</button>
+          <button class="filter-btn" data-tag="cricket" onclick="switchTag(this)">Cricket</button>
+        </div>
+        <span id="news-count" style="font-size:.82rem;color:var(--muted)"></span>
+      </div>
+      <div class="news-grid" id="news-grid"></div>
+      <div class="load-more-wrap" id="load-more-wrap" style="display:none">
+        <button class="load-more-btn" onclick="loadMore()"><i class="fas fa-plus"></i> Load More</button>
+      </div>
+    </div>
+  </section>
+</div>
+
+<footer><p>&#9889; MatchZone Live &nbsp;|&nbsp; &copy; 2025 PrinceTech &nbsp;|&nbsp; <a href="https://github.com/Mayelprince" target="_blank" rel="noopener" style="color:inherit"><i class="fab fa-github"></i> GitHub</a></p></footer>
+
+<div class="modal-bg" id="player-modal">
+  <div class="modal player-modal-inner">
+    <div class="modal-head">
+      <h3 id="player-title">Watch Live</h3>
+      <button class="modal-close" onclick="closePlayer()"><i class="fas fa-times"></i></button>
+    </div>
+    <div id="player-wrap">
+      <video id="player-video" controls playsinline preload="none"></video>
+      <iframe id="player-iframe" allowfullscreen allow="autoplay; fullscreen; picture-in-picture" sandbox="allow-scripts allow-forms allow-popups allow-popups-to-escape-sandbox"></iframe>
+      <div class="player-error" id="player-error"><i class="fas fa-exclamation-triangle"></i>Stream unavailable — it may be geo-restricted or require a VPN.</div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-bg" id="news-modal">
+  <div class="modal">
+    <div class="modal-head"><h3 id="news-modal-title">News</h3><button class="modal-close" onclick="closeNewsModal()"><i class="fas fa-times"></i></button></div>
+    <div class="modal-body news-reader-body" id="news-modal-body"></div>
+  </div>
+</div>
+
+<script src="assets/common.js"></script>
+<script>
+let currentTag = '';
+let currentPage = 1;
+let allItems = [];
+
+function switchTag(btn) {
+  document.querySelectorAll('#tag-filter .filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  currentTag = btn.dataset.tag;
+  currentPage = 1;
+  allItems = [];
+  loadNews(true);
+}
+
+const NEWS_BASE = 'https://www.sofascore.com';
+
+function buildNewsCard(n) {
+  const key = cacheNews(n);
+  const thumb = (n.cover?.url) || (typeof n.cover === 'string' ? n.cover : '') || n.thumbnail || n.image || '';
+  const title = n.title || n.headline || 'Sports News';
+  const summary = n.summary || n.desc || n.description || '';
+  const catVal = n.category;
+  const category = typeof catVal === 'string' ? catVal : (typeof catVal === 'number' ? 'Sports' : catVal?.name || 'Sports');
+  const ts = n.createdAt || n.publishTime || n.date || n.publishedAt || '';
+  const dateStr = ts ? new Date(Number(ts) || ts).toLocaleDateString([], { month: 'short', day: 'numeric', year: 'numeric' }) : 'Recent';
+  return `
+  <div class="news-card" onclick="openNewsModal('${key}')">
+    ${thumb ? `<img class="news-thumb" src="${thumb}" alt="${title}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">` : ''}
+    <div class="news-thumb-ph" style="${thumb ? 'display:none' : ''}"><i class="fas fa-newspaper"></i></div>
+    <div class="news-body">
+      <div class="news-tag">${category}</div>
+      <div class="news-title">${title}</div>
+      ${summary ? `<div class="news-summary">${summary}</div>` : ''}
+      <div class="news-meta"><i class="fas fa-clock"></i>${dateStr}</div>
+    </div>
+  </div>`;
+}
+
+async function loadNews(reset = false) {
+  hideBanner('err');
+  const grid = document.getElementById('news-grid');
+  if (reset) grid.innerHTML = skeletons(8, 'skel-news');
+
+  try {
+    const res = await fetch(apiUrl(`/matchzone/data/news?tag=${encodeURIComponent(currentTag)}&page=${currentPage}`));
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const json = await res.json();
+    if (!json.success) throw new Error('API error');
+
+    const items = json.result?.data?.items || json.result?.items || json.result?.list || json.result?.news || [];
+    if (reset) allItems = items;
+    else allItems = [...allItems, ...items];
+
+    document.getElementById('news-count').textContent = allItems.length + ' article' + (allItems.length !== 1 ? 's' : '');
+
+    if (!allItems.length) {
+      grid.innerHTML = `<div class="empty" style="grid-column:1/-1"><i class="fas fa-newspaper"></i><p>No news found for this category</p></div>`;
+      document.getElementById('load-more-wrap').style.display = 'none';
+      return;
+    }
+
+    grid.innerHTML = allItems.map(n => buildNewsCard(n)).join('');
+    document.getElementById('load-more-wrap').style.display = items.length >= 15 ? 'block' : 'none';
+  } catch (e) {
+    if (reset) grid.innerHTML = `<div class="empty" style="grid-column:1/-1"><i class="fas fa-exclamation-triangle"></i><p>Failed to load news</p></div>`;
+    showBanner('err', 'Could not load news. Check your API URL. ' + e.message);
+  }
+}
+
+async function loadMore() {
+  currentPage++;
+  const btn = document.querySelector('.load-more-btn');
+  if (btn) { btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Loading...'; }
+  await loadNews(false);
+  if (btn) { btn.disabled = false; btn.innerHTML = '<i class="fas fa-plus"></i> Load More'; }
+}
+
+loadNews(true);
+</script>
+</body>
+</html>
